@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="654.0" prefWidth="923.0" style="-fx-background-color: #EBEBEB;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AdminSectionController">
+   <top>
+      <HBox prefHeight="65.0" prefWidth="923.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" prefHeight="139.0" prefWidth="191.0" text="Main Menu" textFill="#656565">
+               <font>
+                  <Font name="Brush Script MT Italic" size="38.0" />
+               </font>
+            </Label>
+            <Separator orientation="VERTICAL" prefHeight="200.0" />
+            <Label alignment="CENTER" prefHeight="65.0" prefWidth="722.0" text="Hotel Management System" textFill="#656565">
+               <font>
+                  <Font name="Brush Script MT Italic" size="38.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </top>
+   <left>
+      <VBox prefHeight="589.0" prefWidth="192.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane prefHeight="626.0" prefWidth="192.0">
+               <children>
+                  <ImageView fitHeight="564.0" fitWidth="196.0" layoutX="-4.0">
+                     <image>
+                        <Image url="@palm.jpg" />
+                     </image>
+                  </ImageView>
+                  <Button layoutX="46.0" layoutY="111.0" mnemonicParsing="false" onMouseClicked="#openClients" prefHeight="37.0" prefWidth="138.0" style="-fx-background-color: #EBEDEF;" text="Clients" />
+                  <Button layoutX="46.0" layoutY="468.0" mnemonicParsing="false" onMouseClicked="#logout" prefHeight="37.0" prefWidth="138.0" style="-fx-background-color: #EBEDEF;" text="Logout" />
+                  <ImageView fitHeight="31.0" fitWidth="30.0" layoutX="12.0" layoutY="471.0">
+                     <image>
+                        <Image url="@exit.png" />
+                     </image>
+                  </ImageView>
+                  <Button layoutX="46.0" layoutY="154.0" mnemonicParsing="false" onMouseClicked="#openAdmins" prefHeight="37.0" prefWidth="138.0" style="-fx-background-color: #EBEDEF;" text="Admins" />
+                  <Button layoutX="46.0" layoutY="197.0" mnemonicParsing="false" onMouseClicked="#openRooms" prefHeight="37.0" prefWidth="138.0" style="-fx-background-color: #EBEDEF;" text="Rooms" />
+                  <ImageView fitHeight="36.0" fitWidth="39.0" layoutX="4.0" layoutY="111.0">
+                     <image>
+                        <Image url="@clients.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="39.0" fitWidth="39.0" layoutX="4.0" layoutY="152.0">
+                     <image>
+                        <Image url="@admins.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="41.0" fitWidth="41.0" layoutX="3.0" layoutY="194.0">
+                     <image>
+                        <Image url="@rooms.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #F2F4F4;" BorderPane.alignment="CENTER">
+         <children>
+            <Text layoutX="330.0" layoutY="570.0" strokeType="OUTSIDE" strokeWidth="0.0" text="© 2024 Summer Hotel" />
+            <Text layoutX="34.0" layoutY="571.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Contact 555-555-555 for any questions" wrappingWidth="227.212890625" />
+            <Text layoutX="599.0" layoutY="570.0" strokeType="OUTSIDE" strokeWidth="0.0" text="version 0.2.2" />
+            <Pane layoutX="243.0" layoutY="59.0" prefHeight="397.0" prefWidth="245.0" style="-fx-background-color: #EAD2EE;">
+               <children>
+                  <Text fill="RED" layoutX="33.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin notice!" wrappingWidth="178.556640625">
+                     <font>
+                        <Font name="Brush Script MT Italic" size="36.0" />
+                     </font>
+                  </Text>
+                  <Text fill="RED" layoutX="9.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="This section is strictly for administration of hotel only. Sharing admin account could lead being terminated from job. Please keep your accounts safe!" wrappingWidth="225.556640625">
+                     <font>
+                        <Font name="Brush Script MT Italic" size="26.0" />
+                     </font>
+                  </Text>
+                  <Text fill="RED" layoutX="92.0" layoutY="382.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Manager" wrappingWidth="152.556640625">
+                     <font>
+                        <Font name="Brush Script MT Italic" size="26.0" />
+                     </font>
+                  </Text>
+               </children>
+            </Pane>
+            <ImageView fitHeight="266.0" fitWidth="123.0" layoutX="86.0" layoutY="190.0">
+               <image>
+                  <Image url="@rose.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="266.0" fitWidth="123.0" layoutX="509.0" layoutY="190.0">
+               <image>
+                  <Image url="@rose.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="67.0" fitWidth="62.0" layoutX="459.0" layoutY="53.0">
+               <image>
+                  <Image url="@pin.png" />
+               </image>
+            </ImageView>
+            <Text fx:id="adminNameLogin" fill="#656565" layoutX="34.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome, temptxt!" wrappingWidth="251.556640625">
+               <font>
+                  <Font name="Brush Script MT Italic" size="36.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </center>
+</BorderPane>
