@@ -1,4 +1,4 @@
-# HOTEL MANAGEMENT SYSTEM NOTE
+# Hotel Management System
 This is Hotel Management System created with JavaFX, this includes working GUI and using MySQL Workbench creating working database. This project was made within eclipse.
 
 ## How to setup database?
