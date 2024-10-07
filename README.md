@@ -1,4 +1,4 @@
-# HotelManagementSystem
+# HOTEL MANAGEMENT SYSTEM
 This is Hotel Management System created with JavaFX, this includes working GUI and using MySQL Workbench creating working database.
 
 # HOW TO ACTIVATE WORKING DATABASE?
