@@ -29,7 +29,7 @@ jobs:
         run: |
           wget https://download2.gluonhq.com/openjfx/21.0.2/openjfx-21.0.2_linux-x64_bin-sdk.zip
           unzip openjfx-21.0.2_linux-x64_bin-sdk.zip
-
+      
       # Compile Java Application
       - name: Compile Java Application
         run: |
@@ -38,36 +38,25 @@ jobs:
           javac --module-path "$JAVAFX_LIBS" --add-modules=ALL-MODULE-PATH \
                 -d bin/application src/application/*.java
 
-      # Copy Resources (FXML, CSS, etc.)
+      # Copy Resources (FXML and CSS)
       - name: Copy Resources (FXML and CSS)
         run: |
           rsync -av --exclude='*.java' src/application/ bin/application/
-      
+
       # Check that all necessary files are present
       - name: Verify Resource Copy
         run: |
-          echo "Looking for .java files in bin/application"
           find bin/application -name "*.java"
-          echo "Looking for MainClient.fxml in bin/application"
-          find bin/application -name "MainClient.fxml"
-          echo "Looking for CSS files in bin/application"
+          find bin/application -name "*.fxml"
           find bin/application -name "*.css"
           echo "Listing contents of bin/application:"
           ls -R bin/application
 
-      # Debug environment variables and paths
-      - name: Debug Environment
-        run: |
-          echo "Environment Variables:"
-          printenv
-          echo "Contents of bin/application:"
-          find bin/application
-
-      # Install necessary dependencies for accessibility and headless mode
+      # Install necessary dependencies for headless mode
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y at-spi2-core xvfb
+          sudo apt-get install -y xvfb at-spi2-core
 
       # Run Java application with Xvfb (Headless mode for CI)
       - name: Run Java Application with Xvfb
