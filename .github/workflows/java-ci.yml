@@ -51,11 +51,22 @@ jobs:
         run: |
           # Copy FXML and CSS to bin/application directory
           cp src/application/*.fxml src/application/*.css bin/application/
+          echo "Copied Resources:"
+          ls bin/application/
 
-      - name: Verify Compiled Classes
+      - name: Debug Environment
         run: |
-          echo "Compiled Classes:"
-          find bin/application -name "*.class"
+          echo "Environment Variables:"
+          printenv
+          echo "Application Directory Contents:"
+          ls -R bin/application
+          echo "JavaFX Library Files:"
+          find javafx-sdk-17.0.2/lib -name "*.jar"
+
+      - name: Install Dependencies for dbind
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y at-spi2-core
 
       - name: Install Xvfb for Headless Mode
         run: |
@@ -82,40 +93,3 @@ jobs:
             --add-exports javafx.base/com.sun.javafx.event=ALL-UNNAMED \
             -cp bin/application:$JAVAFX_JARS \
             -Djava.awt.headless=true application.Main
-
-i cannot get this to work fully on this:
-
-package application;
-	
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-
-
-public class Main extends Application {
-	
-	static Stage globalStage;
-	
-	@Override
-	public void start(Stage primaryStage) {
-		
-		globalStage = primaryStage;
-		
-		try {
-			Parent root = FXMLLoader.load(getClass().getResource("MainClient.fxml"));
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(scene);
-
-			primaryStage.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String[] args) {
-		launch(args);
-	}
-}
