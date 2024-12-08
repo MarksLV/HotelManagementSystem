@@ -21,44 +21,54 @@ jobs:
       
       - name: Download and Setup JavaFX SDK
         run: |
+          # Download JavaFX SDK
           wget https://download2.gluonhq.com/openjfx/17.0.2/openjfx-17.0.2_linux-x64_bin-sdk.zip
           unzip openjfx-17.0.2_linux-x64_bin-sdk.zip
           
-          # List all JAR files to verify
+          # Print library contents for debugging
+          echo "JavaFX Library Contents:"
           find javafx-sdk-17.0.2/lib -name "*.jar"
       
       - name: Compile Java Application
         run: |
-          # Ensure the output directory exists
+          # Create output directory
           mkdir -p out
           
-          # List all JavaFX jar files to be used
-          JAVAFX_JARS=$(find javafx-sdk-17.0.2/lib -name "*.jar" | tr '\n' ':')
+          # Prepare module path and classpath
+          JAVAFX_LIBS="javafx-sdk-17.0.2/lib"
+          JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
           
-          # Compile with explicit module path and all JavaFX modules
+          # Debug: print module path and classpath
+          echo "Module Path: $JAVAFX_LIBS"
+          echo "Classpath: $JAVAFX_JARS"
+          
+          # Compile with verbose output and explicit module configuration
           javac \
-            --module-path javafx-sdk-17.0.2/lib \
-            --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.scene \
-            -classpath "$JAVAFX_JARS" \
+            --module-path "$JAVAFX_LIBS" \
+            --add-modules=ALL-MODULE-PATH \
+            --add-reads javafx.graphics=ALL-UNNAMED \
+            --add-opens=java.base/java.lang=ALL-UNNAMED \
+            --add-exports javafx.base/com.sun.javafx.event=ALL-UNNAMED \
             -d out src/application/*.java
       
       - name: Verify Compiled Classes
         run: |
-          echo "Listing compiled classes:"
+          echo "Compiled Classes:"
           find out -name "*.class"
       
       - name: Run Java Application
         run: |
-          # Prepare JavaFX runtime modules
-          JAVAFX_MODULES="javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.scene"
+          # Prepare module path and classpath
+          JAVAFX_LIBS="javafx-sdk-17.0.2/lib"
+          JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
           
-          # List all JavaFX jar files
-          JAVAFX_JARS=$(find javafx-sdk-17.0.2/lib -name "*.jar" | tr '\n' ':')
-          
-          # Run the application
+          # Run the application with comprehensive module configuration
           java \
-            --module-path javafx-sdk-17.0.2/lib \
-            --add-modules "$JAVAFX_MODULES" \
-            -classpath "$JAVAFX_JARS:out" \
+            --module-path "$JAVAFX_LIBS" \
+            --add-modules=ALL-MODULE-PATH \
+            --add-reads javafx.graphics=ALL-UNNAMED \
+            --add-opens=java.base/java.lang=ALL-UNNAMED \
+            --add-exports javafx.base/com.sun.javafx.event=ALL-UNNAMED \
+            -cp out:$JAVAFX_JARS \
             -Djava.awt.headless=true \
             application.Main
