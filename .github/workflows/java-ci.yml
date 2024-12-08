@@ -66,9 +66,10 @@ jobs:
       - name: Run Java Application with Xvfb
         run: |
           export DISPLAY=:99
-          nohup Xvfb :99 -screen 0 1024x768x24 &
+          nohup Xvfb :99 -screen 0 1024x768x24 > xvfb.log 2>&1 &
           sleep 5
+          tail -f xvfb.log &
           JAVAFX_LIBS="javafx-sdk-21.0.2/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
           java --module-path "$JAVAFX_LIBS" --add-modules=ALL-MODULE-PATH \
-               -cp bin/application:$JAVAFX_JARS application.Main
+          -cp bin/application:$JAVAFX_JARS application.Main
