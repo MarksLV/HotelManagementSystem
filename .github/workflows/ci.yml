@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'
-          distribution: 'adoptopenjdk'
+          distribution: 'openjdk'
 
       # Compile and run your Java project (using javac directly)
       - name: Build and run
