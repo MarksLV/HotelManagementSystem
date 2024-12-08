@@ -54,6 +54,11 @@ jobs:
           echo "Copied Resources:"
           find bin/application/
 
+      - name: Verify Resource Copy
+        run: |
+          find bin/application -name "MainClient.fxml"
+          find bin/application -name "*.css"
+
       - name: Debug Environment
         run: |
           echo "Environment Variables:"
