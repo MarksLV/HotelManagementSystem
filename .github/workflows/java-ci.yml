@@ -55,9 +55,18 @@ jobs:
         run: |
           echo "Compiled Classes:"
           find out -name "*.class"
-      
-      - name: Run Java Application
+
+      - name: Install Xvfb for Headless Mode
         run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+
+      - name: Run Java Application with Xvfb
+        run: |
+          # Start Xvfb (virtual display)
+          export DISPLAY=:99
+          nohup Xvfb :99 -screen 0 1024x768x24 &
+          
           # Prepare module path and classpath
           JAVAFX_LIBS="javafx-sdk-17.0.2/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
