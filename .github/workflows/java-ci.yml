@@ -22,22 +22,22 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       
-      - name: Download and Setup JavaFX SDK (21.0.2)
+      - name: Download and Setup JavaFX SDK
         run: |
           wget https://download2.gluonhq.com/openjfx/21.0.2/openjfx-21.0.2_linux-x64_bin-sdk.zip
           unzip openjfx-21.0.2_linux-x64_bin-sdk.zip
-
+      
       - name: Compile Java Application
         run: |
           mkdir -p bin/application
-          JAVAFX_LIBS="javafx-sdk-21.0.2/lib"  # Updated to JavaFX 21.0.2
+          JAVAFX_LIBS="javafx-sdk-21.0.2/lib"
           javac --module-path "$JAVAFX_LIBS" --add-modules=ALL-MODULE-PATH \
                 -d bin/application src/application/*.java
-      
-      - name: Copy Resources
+
+      - name: Copy Resources (FXML and CSS)
         run: |
           rsync -av --exclude='*.java' src/application/ bin/application/
-      
+
       - name: Verify Resource Copy
         run: |
           find bin/application -name "MainClient.fxml"
@@ -64,7 +64,7 @@ jobs:
           export DISPLAY=:99
           nohup Xvfb :99 -screen 0 1024x768x24 &
           sleep 5
-          JAVAFX_LIBS="javafx-sdk-21.0.2/lib"  # Updated to JavaFX 21.0.2
+          JAVAFX_LIBS="javafx-sdk-21.0.2/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
           java --module-path "$JAVAFX_LIBS" --add-modules=ALL-MODULE-PATH \
                -cp bin/application:$JAVAFX_JARS application.Main
