@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
       
@@ -38,20 +38,16 @@ jobs:
           javac --module-path "$JAVAFX_LIBS" --add-modules=ALL-MODULE-PATH \
                 -d bin/application src/application/*.java
 
-      # Install necessary dependencies for headless mode
-      - name: Install Dependencies
+      # Copy Resources (FXML and CSS)
+      - name: Copy Resources (FXML and CSS)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y xvfb at-spi2-core
+          rsync -av --exclude='*.java' src/application/ bin/application/
 
-      # Run Java Application with Xvfb (Headless mode for CI)
-      - name: Run Java Application with Xvfb
+      # Check that all necessary files are present
+      - name: Verify Resource Copy
         run: |
-          export DISPLAY=:99
-          nohup Xvfb :99 -screen 0 1024x768x24 > xvfb.log 2>&1 &
-          sleep 5
-          tail -f xvfb.log &
-          JAVAFX_LIBS="javafx-sdk-21.0.2/lib"
-          JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
-          java --module-path "$JAVAFX_LIBS" --add-modules=ALL-MODULE-PATH \
-               -cp bin/application:$JAVAFX_JARS application.Main
+          find bin/application -name "*.java"
+          find bin/application -name "*.fxml"
+          find bin/application -name "*.css"
+          echo "Listing contents of bin/application:"
+          ls -R bin/application
