@@ -24,12 +24,23 @@ jobs:
           java-version: '17'  # Specify Java 17
           distribution: 'temurin'  # Use Temurin
 
-      # Compile and run your Java project (using javac directly)
-      - name: Build and run
+      # Install JavaFX dependencies (Download JavaFX SDK)
+      - name: Install JavaFX SDK
+        run: |
+          wget https://github.com/openjfx/openjfx/releases/download/17/openjfx-17_linux-x64_bin-sdk.zip
+          unzip openjfx-17_linux-x64_bin-sdk.zip
+          sudo mv javafx-sdk-17 /opt/
+          
+      # Set up environment variables for JavaFX
+      - name: Set JavaFX environment variables
+        run: echo "JAVA_HOME=/opt/javafx-sdk-17" >> $GITHUB_ENV
+
+      # Compile and run your Java project with JavaFX
+      - name: Build and run JavaFX project
         run: |
           # Ensure the output directory exists
           mkdir -p out
           # Compile the Java code (adjust the source path as needed)
-          javac -d out src/application/*.java
+          javac --module-path /opt/javafx-sdk-17/lib --add-modules javafx.controls,javafx.fxml -d out src/application/*.java
           # Run the main application (replace Main with your actual main class)
-          java -cp out application.Main
+          java --module-path /opt/javafx-sdk-17/lib --add-modules javafx.controls,javafx.fxml -cp out application.Main
