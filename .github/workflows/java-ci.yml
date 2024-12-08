@@ -21,41 +21,27 @@ jobs:
       
       - name: Download and Setup JavaFX SDK
         run: |
-          # Download JavaFX SDK
           wget https://download2.gluonhq.com/openjfx/17.0.2/openjfx-17.0.2_linux-x64_bin-sdk.zip
           unzip openjfx-17.0.2_linux-x64_bin-sdk.zip
           
-          # Print library contents for debugging
-          echo "JavaFX Library Contents:"
-          find javafx-sdk-17.0.2/lib -name "*.jar"
-      
       - name: Compile Java Application
         run: |
-          # Create output directory (bin)
-          mkdir -p bin/application
-          
-          # Prepare module path and classpath
+          mkdir -p bin
           JAVAFX_LIBS="javafx-sdk-17.0.2/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
-          
-          # Compile with verbose output and explicit module configuration
           javac \
             --module-path "$JAVAFX_LIBS" \
             --add-modules=ALL-MODULE-PATH \
-            --add-reads javafx.graphics=ALL-UNNAMED \
-            --add-opens=java.base/java.lang=ALL-UNNAMED \
-            --add-exports javafx.base/com.sun.javafx.event=ALL-UNNAMED \
-            -d bin/application src/application/*.java
+            -d bin src/application/*.java
       
       - name: Copy Resources
         run: |
-          # Copy FXML and CSS to bin/application directory
-          cp src/application/*.fxml src/application/*.css bin/application/
+          cp src/application/*.fxml src/application/*.css bin/
 
       - name: Verify Compiled Classes
         run: |
           echo "Compiled Classes:"
-          find bin/application -name "*.class"
+          find bin -name "*.class"
 
       - name: Install Xvfb for Headless Mode
         run: |
@@ -64,21 +50,13 @@ jobs:
 
       - name: Run Java Application with Xvfb
         run: |
-          # Start Xvfb (virtual display)
           export DISPLAY=:99
           nohup Xvfb :99 -screen 0 1024x768x24 &
           sleep 5
-          
-          # Prepare module path and classpath
           JAVAFX_LIBS="javafx-sdk-17.0.2/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
-          
-          # Run the application with comprehensive module configuration
           java \
             --module-path "$JAVAFX_LIBS" \
             --add-modules=ALL-MODULE-PATH \
-            --add-reads javafx.graphics=ALL-UNNAMED \
-            --add-opens=java.base/java.lang=ALL-UNNAMED \
-            --add-exports javafx.base/com.sun.javafx.event=ALL-UNNAMED \
-            -cp bin/application:$JAVAFX_JARS \
+            -cp bin:$JAVAFX_JARS \
             -Djava.awt.headless=true application.Main
