@@ -40,8 +40,12 @@ jobs:
 
       - name: Verify Resource Copy
         run: |
+          echo "Looking for MainClient.fxml in bin/application"
           find bin/application -name "MainClient.fxml"
+          echo "Looking for CSS files in bin/application"
           find bin/application -name "*.css"
+          echo "Contents of bin/application:"
+          ls -R bin/application
 
       - name: Debug Environment
         run: |
