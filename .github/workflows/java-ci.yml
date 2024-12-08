@@ -19,28 +19,39 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       
-      - name: Download JavaFX SDK
+      - name: Download and Setup JavaFX SDK
         run: |
           wget https://download2.gluonhq.com/openjfx/17.0.2/openjfx-17.0.2_linux-x64_bin-sdk.zip
           unzip openjfx-17.0.2_linux-x64_bin-sdk.zip
+          
+          # Verify JavaFX libraries
+          echo "Listing JavaFX libraries:"
+          ls -l javafx-sdk-17.0.2/lib/*.jar
       
-      - name: List JavaFX libraries
-        run: ls -R javafx-sdk-17.0.2/lib
+      - name: Prepare JavaFX Classpath
+        run: |
+          # Create a classpath with all JavaFX jars
+          export JAVAFX_LIBS=$(find javafx-sdk-17.0.2/lib -name "*.jar" | tr '\n' ':')
+          echo "JavaFX Classpath: $JAVAFX_LIBS"
       
-      - name: Build and run
+      - name: Compile Java Application
         run: |
           # Ensure the output directory exists
           mkdir -p out
           
-          # Compile the Java code with all required JavaFX libraries
+          # Compile with verbose output and explicit JavaFX jars
           javac \
             --module-path javafx-sdk-17.0.2/lib \
             --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.scene \
+            -verbose \
             -d out src/application/*.java
-          
-          # Run the main application with JavaFX libraries
+      
+      - name: Run Java Application
+        run: |
+          # Run with verbose module information
           java \
             --module-path javafx-sdk-17.0.2/lib \
             --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.scene \
             -Djava.awt.headless=true \
+            -verbose:module \
             -cp out application.Main
