@@ -1,5 +1,4 @@
 name: Java CI
-
 on:
   push:
     branches:
@@ -7,32 +6,41 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v3
+      
       - name: Set up JDK 17 (Temurin)
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-
+      
+      - name: Download JavaFX SDK
+        run: |
+          wget https://download2.gluonhq.com/openjfx/17.0.2/openjfx-17.0.2_linux-x64_bin-sdk.zip
+          unzip openjfx-17.0.2_linux-x64_bin-sdk.zip
+      
+      - name: List JavaFX libraries
+        run: ls -R javafx-sdk-17.0.2/lib
+      
       - name: Build and run
         run: |
           # Ensure the output directory exists
           mkdir -p out
-
+          
           # Compile the Java code with all required JavaFX libraries
-          javac --module-path libs/javafx-sdk/lib \
-            --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.collections,javafx.scene,javafx.scene.control,javafx.scene.text,javafx.swing,javafx.web \
+          javac \
+            --module-path javafx-sdk-17.0.2/lib \
+            --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.scene \
             -d out src/application/*.java
-
+          
           # Run the main application with JavaFX libraries
-          java --module-path libs/javafx-sdk/lib \
-            --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.collections,javafx.scene,javafx.scene.control,javafx.scene.text,javafx.swing,javafx.web \
-            -Djava.awt.headless=true -cp out application.Main
+          java \
+            --module-path javafx-sdk-17.0.2/lib \
+            --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.scene \
+            -Djava.awt.headless=true \
+            -cp out application.Main
