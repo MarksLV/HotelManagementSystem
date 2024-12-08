@@ -17,12 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up JDK 17 with Adoptium Temurin distribution
-      - name: Set up JDK 17 (Adoptium Temurin)
-        uses: actions/setup-java@v4.5.0
+      # Set up JDK 17 with OpenJDK distribution (using setup-java@v2)
+      - name: Set up JDK 17 (OpenJDK)
+        uses: actions/setup-java@v2
         with:
           java-version: '17'  # Specify Java 17
-          distribution: 'adoptium'  # Use Adoptium Temurin
+          distribution: 'openjdk'  # Use OpenJDK
 
       # Compile and run your Java project (using javac directly)
       - name: Build and run
