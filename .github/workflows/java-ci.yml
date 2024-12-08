@@ -49,10 +49,10 @@ jobs:
       
       - name: Copy Resources
         run: |
-          # Copy FXML and CSS to bin/application directory
-          cp src/application/*.fxml src/application/*.css bin/application/
+          # Copy all non-Java resources to bin/application while preserving structure
+          rsync -av --exclude='*.java' src/application/ bin/application/
           echo "Copied Resources:"
-          ls bin/application/
+          find bin/application/
 
       - name: Debug Environment
         run: |
@@ -84,7 +84,7 @@ jobs:
           JAVAFX_LIBS="javafx-sdk-17.0.2/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
           
-          # Run the application with comprehensive module configuration
+          # Run the application with proper classpath
           java \
             --module-path "$JAVAFX_LIBS" \
             --add-modules=ALL-MODULE-PATH \
