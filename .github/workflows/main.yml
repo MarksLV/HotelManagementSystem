@@ -3,7 +3,7 @@ name: JavaFX Build and Test
 on:
   push:
     branches:
-      - main  # Trigger this action on push to the main branch
+      - main  # Trigger this action on push to the main branch (you can adjust this to your branch)
   pull_request:
     branches:
       - main  # Trigger on pull requests to the main branch
@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'  # Java version for JavaFX
-        distribution: 'adoptopenjdk'
+        distribution: 'adoptium'
 
     - name: Install JavaFX dependencies
       run: |
