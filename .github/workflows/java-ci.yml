@@ -64,7 +64,7 @@ jobs:
           export DISPLAY=:99
           nohup Xvfb :99 -screen 0 1024x768x24 &
           sleep 5
-          JAVAFX_LIBS="javafx-sdk-17.0.2/lib"
+          JAVAFX_LIBS="javafx-sdk/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
           java --module-path "$JAVAFX_LIBS" --add-modules=ALL-MODULE-PATH \
                -cp bin/application:$JAVAFX_JARS application.Main
