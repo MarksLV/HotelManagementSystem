@@ -3,44 +3,32 @@ name: Java CI
 on:
   push:
     branches:
-      - main  # Trigger on push to the main branch
+      - main
   pull_request:
     branches:
-      - main  # Trigger on pull request to the main branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up JDK 17 with Temurin
       - name: Set up JDK 17 (Temurin)
         uses: actions/setup-java@v2
         with:
-          java-version: '17'  # Specify Java 17
-          distribution: 'temurin'  # Use Temurin
+          java-version: '17'
+          distribution: 'temurin'
 
-      # Install JavaFX dependencies (Download JavaFX SDK)
-      - name: Install JavaFX SDK
-        run: |
-          wget https://github.com/openjfx/openjfx/releases/download/17/openjfx-17_linux-x64_bin-sdk.zip
-          unzip openjfx-17_linux-x64_bin-sdk.zip
-          sudo mv javafx-sdk-17 /opt/
-          
-      # Set up environment variables for JavaFX
-      - name: Set JavaFX environment variables
-        run: echo "JAVA_HOME=/opt/javafx-sdk-17" >> $GITHUB_ENV
-
-      # Compile and run your Java project with JavaFX
-      - name: Build and run JavaFX project
+      - name: Build and run
         run: |
           # Ensure the output directory exists
           mkdir -p out
-          # Compile the Java code (adjust the source path as needed)
-          javac --module-path /opt/javafx-sdk-17/lib --add-modules javafx.controls,javafx.fxml -d out src/application/*.java
-          # Run the main application (replace Main with your actual main class)
-          java --module-path /opt/javafx-sdk-17/lib --add-modules javafx.controls,javafx.fxml -cp out application.Main
+          
+          # Compile the Java code with JavaFX libraries
+          javac --module-path libs/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml -d out src/application/*.java
+          
+          # Run the main application with JavaFX libraries
+          java --module-path libs/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml -cp out application.Main
