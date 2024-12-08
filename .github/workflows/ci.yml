@@ -3,7 +3,7 @@ name: Java CI
 on:
   push:
     branches:
-      - main  # Trigger on push to the main
+      - main  # Trigger on push to the main branch
   pull_request:
     branches:
       - main  # Trigger on pull request to the main branch
@@ -17,12 +17,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up JDK with distribution specified
-      - name: Set up JDK 17 (AdoptOpenJDK)
+      # Set up JDK (default OpenJDK will be used, no need for 'distribution' input)
+      - name: Set up JDK 17
         uses: actions/setup-java@v2
         with:
-          java-version: '17'
-          distribution: 'openjdk'
+          java-version: '17'  # Specify Java 17
 
       # Compile and run your Java project (using javac directly)
       - name: Build and run
