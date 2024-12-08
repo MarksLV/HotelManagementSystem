@@ -17,11 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up JDK (default OpenJDK will be used, no need for 'distribution' input)
-      - name: Set up JDK 17
+      # Set up JDK 17 with Amazon Corretto distribution
+      - name: Set up JDK 17 (Amazon Corretto)
         uses: actions/setup-java@v2
         with:
           java-version: '17'  # Specify Java 17
+          distribution: 'corretto'  # Use Amazon Corretto
 
       # Compile and run your Java project (using javac directly)
       - name: Build and run
