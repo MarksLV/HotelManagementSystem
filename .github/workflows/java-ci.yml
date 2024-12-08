@@ -12,45 +12,45 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Set up JDK 17 (Temurin)
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-      
+
       - name: Download and Setup JavaFX SDK
         run: |
           # Download JavaFX SDK
           wget https://download2.gluonhq.com/openjfx/17.0.2/openjfx-17.0.2_linux-x64_bin-sdk.zip
           unzip openjfx-17.0.2_linux-x64_bin-sdk.zip
-          
+
           # Print library contents for debugging
           echo "JavaFX Library Contents:"
           find javafx-sdk-17.0.2/lib -name "*.jar"
-      
+
       - name: Compile Java Application
         run: |
           # Create output directory
           mkdir -p out
-          
+
           # Prepare module path and classpath
           JAVAFX_LIBS="javafx-sdk-17.0.2/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
-          
+
           # Debug: print module path and classpath
           echo "Module Path: $JAVAFX_LIBS"
           echo "Classpath: $JAVAFX_JARS"
-          
-          # Compile with verbose output and explicit module configuration
+
+          # Compile the Java application, including Main.java
           javac \
             --module-path "$JAVAFX_LIBS" \
-            --add-modules=ALL-MODULE-PATH \
+            --add-modules=javafx.controls,javafx.fxml,javafx.graphics \
             --add-reads javafx.graphics=ALL-UNNAMED \
             --add-opens=java.base/java.lang=ALL-UNNAMED \
             --add-exports javafx.base/com.sun.javafx.event=ALL-UNNAMED \
             -d out src/application/*.java
-      
+
       - name: Verify Compiled Classes
         run: |
           echo "Compiled Classes:"
@@ -61,20 +61,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y xvfb
 
-      - name: Run Java Application with Xvfb
+      - name: Run Java Application with Xvfb (Check Main.fxml)
         run: |
           # Start Xvfb (virtual display)
           export DISPLAY=:99
           nohup Xvfb :99 -screen 0 1024x768x24 &
-          
+
           # Prepare module path and classpath
           JAVAFX_LIBS="javafx-sdk-17.0.2/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
-          
-          # Run the application with comprehensive module configuration
+
+          # Run the application with Main.fxml
           java \
             --module-path "$JAVAFX_LIBS" \
-            --add-modules=ALL-MODULE-PATH \
+            --add-modules=javafx.controls,javafx.fxml,javafx.graphics \
             --add-reads javafx.graphics=ALL-UNNAMED \
             --add-opens=java.base/java.lang=ALL-UNNAMED \
             --add-exports javafx.base/com.sun.javafx.event=ALL-UNNAMED \
