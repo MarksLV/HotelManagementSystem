@@ -26,9 +26,9 @@ jobs:
         run: |
           # Ensure the output directory exists
           mkdir -p out
-          
+
           # Compile the Java code with JavaFX libraries
           javac --module-path libs/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml -d out src/application/*.java
-          
+
           # Run the main application with JavaFX libraries
           java --module-path libs/javafx-sdk/lib --add-modules javafx.controls,javafx.fxml -cp out application.Main
