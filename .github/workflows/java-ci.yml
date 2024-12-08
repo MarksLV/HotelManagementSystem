@@ -24,34 +24,41 @@ jobs:
           wget https://download2.gluonhq.com/openjfx/17.0.2/openjfx-17.0.2_linux-x64_bin-sdk.zip
           unzip openjfx-17.0.2_linux-x64_bin-sdk.zip
           
-          # Verify JavaFX libraries
-          echo "Listing JavaFX libraries:"
-          ls -l javafx-sdk-17.0.2/lib/*.jar
-      
-      - name: Prepare JavaFX Classpath
-        run: |
-          # Create a classpath with all JavaFX jars
-          export JAVAFX_LIBS=$(find javafx-sdk-17.0.2/lib -name "*.jar" | tr '\n' ':')
-          echo "JavaFX Classpath: $JAVAFX_LIBS"
+          # List all JAR files to verify
+          find javafx-sdk-17.0.2/lib -name "*.jar"
       
       - name: Compile Java Application
         run: |
           # Ensure the output directory exists
           mkdir -p out
           
-          # Compile with verbose output and explicit JavaFX jars
+          # List all JavaFX jar files to be used
+          JAVAFX_JARS=$(find javafx-sdk-17.0.2/lib -name "*.jar" | tr '\n' ':')
+          
+          # Compile with explicit module path and all JavaFX modules
           javac \
             --module-path javafx-sdk-17.0.2/lib \
             --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.scene \
-            -verbose \
+            -classpath "$JAVAFX_JARS" \
             -d out src/application/*.java
+      
+      - name: Verify Compiled Classes
+        run: |
+          echo "Listing compiled classes:"
+          find out -name "*.class"
       
       - name: Run Java Application
         run: |
-          # Run with verbose module information
+          # Prepare JavaFX runtime modules
+          JAVAFX_MODULES="javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.scene"
+          
+          # List all JavaFX jar files
+          JAVAFX_JARS=$(find javafx-sdk-17.0.2/lib -name "*.jar" | tr '\n' ':')
+          
+          # Run the application
           java \
             --module-path javafx-sdk-17.0.2/lib \
-            --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.scene \
+            --add-modules "$JAVAFX_MODULES" \
+            -classpath "$JAVAFX_JARS:out" \
             -Djava.awt.headless=true \
-            -verbose:module \
-            -cp out application.Main
+            application.Main
