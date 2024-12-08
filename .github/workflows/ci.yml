@@ -17,11 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up JDK (ensure the default JDK is used, no need for 'distribution' input)
-      - name: Set up JDK 17
+      # Set up JDK with distribution specified
+      - name: Set up JDK 17 (AdoptOpenJDK)
         uses: actions/setup-java@v2
         with:
-          java-version: '17'  # Specify Java 17
+          java-version: '17'
+          distribution: 'adoptopenjdk'
 
       # Compile and run your Java project (using javac directly)
       - name: Build and run
