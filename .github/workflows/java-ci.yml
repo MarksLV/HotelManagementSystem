@@ -13,20 +13,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
       
+      # Set up JDK 17 (Temurin)
       - name: Set up JDK 17 (Temurin)
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
       
+      # Download and Setup JavaFX SDK
       - name: Download and Setup JavaFX SDK
         run: |
           wget https://download2.gluonhq.com/openjfx/21.0.2/openjfx-21.0.2_linux-x64_bin-sdk.zip
           unzip openjfx-21.0.2_linux-x64_bin-sdk.zip
-      
+
+      # Compile Java Application
       - name: Compile Java Application
         run: |
           mkdir -p bin/application
@@ -34,19 +38,24 @@ jobs:
           javac --module-path "$JAVAFX_LIBS" --add-modules=ALL-MODULE-PATH \
                 -d bin/application src/application/*.java
 
+      # Copy Resources (FXML, CSS, etc.)
       - name: Copy Resources (FXML and CSS)
         run: |
           rsync -av --exclude='*.java' src/application/ bin/application/
-
+      
+      # Check that all necessary files are present
       - name: Verify Resource Copy
         run: |
+          echo "Looking for .java files in bin/application"
+          find bin/application -name "*.java"
           echo "Looking for MainClient.fxml in bin/application"
           find bin/application -name "MainClient.fxml"
           echo "Looking for CSS files in bin/application"
           find bin/application -name "*.css"
-          echo "Contents of bin/application:"
+          echo "Listing contents of bin/application:"
           ls -R bin/application
 
+      # Debug environment variables and paths
       - name: Debug Environment
         run: |
           echo "Environment Variables:"
@@ -54,15 +63,13 @@ jobs:
           echo "Contents of bin/application:"
           find bin/application
 
-      - name: Install Accessibility Dependencies
+      # Install necessary dependencies for accessibility and headless mode
+      - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y at-spi2-core
-      
-      - name: Install Xvfb for Headless Mode
-        run: |
-          sudo apt-get install -y xvfb
+          sudo apt-get install -y at-spi2-core xvfb
 
+      # Run Java application with Xvfb (Headless mode for CI)
       - name: Run Java Application with Xvfb
         run: |
           export DISPLAY=:99
@@ -72,4 +79,4 @@ jobs:
           JAVAFX_LIBS="javafx-sdk-21.0.2/lib"
           JAVAFX_JARS=$(find "$JAVAFX_LIBS" -name "*.jar" | tr '\n' ':')
           java --module-path "$JAVAFX_LIBS" --add-modules=ALL-MODULE-PATH \
-          -cp bin/application:$JAVAFX_JARS application.Main
+               -cp bin/application:$JAVAFX_JARS application.Main
